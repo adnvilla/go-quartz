@@ -182,11 +182,30 @@ func (parser *CronExpressionParser) nextTime(prev time.Time, fields []*CronField
 	month := parser.nextMonth(ttok[1], fields[4])
 	year := parser.nextYear(ttok[4], fields[6])
 
+	yearN, _ := strconv.Atoi(year)
+	monthN, _ := strconv.Atoi(month)
+
+	current := time.Date(yearN, time.Month(monthN), 1, 0, 0, 0, 0, prev.Location())
+	lastDayOfMonth := getLastDayOfMonth(current)
+
+	if dayOfMonth > lastDayOfMonth {
+		dayOfMonth = lastDayOfMonth
+	}
+
 	nstr := fmt.Sprintf("%s %s %s:%s:%s %s", month, strconv.Itoa(dayOfMonth),
 		hour, minute, second, year)
 	ntime, err := time.ParseInLocation(writeDateLayout, nstr, prev.Location())
 	nextTime = ntime.UnixNano()
 	return
+}
+
+func getLastDayOfMonth(date time.Time) int {
+	year, month, _ := date.Date()
+	location := date.Location()
+
+	firstDayOfMonth := time.Date(year, month, 1, 0, 0, 0, 0, location)
+	lastDayOfMonth := firstDayOfMonth.AddDate(0, 1, -1)
+	return lastDayOfMonth.Day()
 }
 
 // the ? wildcard is only used in the day of month and day of week fields
