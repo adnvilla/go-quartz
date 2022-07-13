@@ -183,7 +183,7 @@ func (parser *CronExpressionParser) nextTime(prev time.Time, fields []*CronField
 	year := parser.nextYear(ttok[4], fields[6])
 
 	yearN, _ := strconv.Atoi(year)
-	monthN, _ := strconv.Atoi(month)
+	monthN := intVal(months, month)
 
 	current := time.Date(yearN, time.Month(monthN), 1, 0, 0, 0, 0, prev.Location())
 	lastDayOfMonth := getLastDayOfMonth(current)

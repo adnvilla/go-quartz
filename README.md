@@ -1,8 +1,8 @@
 # go-quartz
-[![Build](https://github.com/reugn/go-quartz/actions/workflows/build.yml/badge.svg)](https://github.com/reugn/go-quartz/actions/workflows/build.yml)
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/reugn/go-quartz)](https://pkg.go.dev/github.com/reugn/go-quartz)
-[![Go Report Card](https://goreportcard.com/badge/github.com/reugn/go-quartz)](https://goreportcard.com/report/github.com/reugn/go-quartz)
-[![codecov](https://codecov.io/gh/reugn/go-quartz/branch/master/graph/badge.svg)](https://codecov.io/gh/reugn/go-quartz)
+[![Build](https://github.com/adnvilla/go-quartz/actions/workflows/build.yml/badge.svg)](https://github.com/adnvilla/go-quartz/actions/workflows/build.yml)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/adnvilla/go-quartz)](https://pkg.go.dev/github.com/adnvilla/go-quartz)
+[![Go Report Card](https://goreportcard.com/badge/github.com/adnvilla/go-quartz)](https://goreportcard.com/report/github.com/adnvilla/go-quartz)
+[![codecov](https://codecov.io/gh/adnvilla/go-quartz/branch/master/graph/badge.svg)](https://codecov.io/gh/adnvilla/go-quartz)
 
 A minimalistic and zero-dependency scheduling library for Go.
 
