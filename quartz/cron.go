@@ -441,7 +441,7 @@ func (parser *CronExpressionParser) nextDay(prevWeek int, weekField *CronField,
 	if weekField.isEmpty() && monthField.isEmpty() && parser.lastSet(dayOfWeekIndex) {
 		if parser.dayBump {
 			nextDay, parser.monthBump = bumpValue(prevDay, parser.maxDays, 1, false)
-			if nextDay > maxDays {
+			if nextDay > maxDays && prevDay >= maxDays {
 				parser.monthBump = true
 			}
 			return nextDay
@@ -451,7 +451,7 @@ func (parser *CronExpressionParser) nextDay(prevWeek int, weekField *CronField,
 
 	if len(monthField.values) > 0 {
 		nextDay, parser.monthBump = parser.findNextValue(prevDay, monthField.values)
-		if nextDay > maxDays {
+		if nextDay > maxDays && prevDay >= maxDays {
 			parser.monthBump = true
 		}
 		parser.setDone(dayOfMonthIndex)
@@ -470,7 +470,7 @@ func (parser *CronExpressionParser) nextDay(prevWeek int, weekField *CronField,
 			_step = step(prevWeek, nextWeek, 7)
 		}
 		nextDay, parser.monthBump = bumpValue(prevDay, parser.maxDays, _step, false)
-		if nextDay > maxDays {
+		if nextDay > maxDays && prevDay >= maxDays {
 			parser.monthBump = true
 		}
 		return nextDay
