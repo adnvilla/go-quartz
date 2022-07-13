@@ -178,7 +178,7 @@ func (parser *CronExpressionParser) nextTime(prev time.Time, fields []*CronField
 	second := parser.nextSeconds(atoi(hms[2]), fields[0])
 	minute := parser.nextMinutes(atoi(hms[1]), fields[1])
 	hour := parser.nextHours(atoi(hms[0]), fields[2])
-	dayOfMonth := parser.nextDay(intVal(days, ttok[0])-1, fields[5], atoi(ttok[2]), fields[3])
+	dayOfMonth := parser.nextDay(intVal(days, ttok[0])-1, fields[5], atoi(ttok[2]), fields[3], ttok[1])
 	month := parser.nextMonth(ttok[1], fields[4])
 	year := parser.nextYear(ttok[4], fields[6])
 
@@ -433,20 +433,29 @@ func (parser *CronExpressionParser) nextHours(prev int, field *CronField) string
 }
 
 func (parser *CronExpressionParser) nextDay(prevWeek int, weekField *CronField,
-	prevMonth int, monthField *CronField) int {
-	var nextMonth int
+	prevDay int, monthField *CronField, prevMonth string) int {
+	var nextDay int
+	month := intVal(months, prevMonth)
+	maxDays := daysInMonth[month]
+
 	if weekField.isEmpty() && monthField.isEmpty() && parser.lastSet(dayOfWeekIndex) {
 		if parser.dayBump {
-			nextMonth, parser.monthBump = bumpValue(prevMonth, parser.maxDays, 1, false)
-			return nextMonth
+			nextDay, parser.monthBump = bumpValue(prevDay, parser.maxDays, 1, false)
+			if nextDay > maxDays {
+				parser.monthBump = true
+			}
+			return nextDay
 		}
-		return prevMonth
+		return prevDay
 	}
 
 	if len(monthField.values) > 0 {
-		nextMonth, parser.monthBump = parser.findNextValue(prevMonth, monthField.values)
+		nextDay, parser.monthBump = parser.findNextValue(prevDay, monthField.values)
+		if nextDay > maxDays {
+			parser.monthBump = true
+		}
 		parser.setDone(dayOfMonthIndex)
-		return nextMonth
+		return nextDay
 	} else if len(weekField.values) > 0 {
 		nextWeek, bumpDayOfMonth := parser.findNextValue(prevWeek, weekField.values)
 		parser.setDone(dayOfWeekIndex)
@@ -460,10 +469,13 @@ func (parser *CronExpressionParser) nextDay(prevWeek int, weekField *CronField,
 		} else {
 			_step = step(prevWeek, nextWeek, 7)
 		}
-		nextMonth, parser.monthBump = bumpValue(prevMonth, parser.maxDays, _step, false)
-		return nextMonth
+		nextDay, parser.monthBump = bumpValue(prevDay, parser.maxDays, _step, false)
+		if nextDay > maxDays {
+			parser.monthBump = true
+		}
+		return nextDay
 	}
-	return prevMonth
+	return prevDay
 }
 
 func (parser *CronExpressionParser) nextMonth(prev string, field *CronField) string {
