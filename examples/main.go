@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/reugn/go-quartz/quartz"
+	"github.com/adnvilla/go-quartz/quartz"
 )
 
 func main() {
